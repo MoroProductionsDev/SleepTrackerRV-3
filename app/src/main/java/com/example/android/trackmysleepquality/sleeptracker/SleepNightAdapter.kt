@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.convertDurationToFormatted
@@ -37,7 +38,7 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
     // it will the the recycler view that data has changed
     set(value) {
         field = value
-        notifyDataSetChanged()
+        notifyDataSetChanged()  // base method to Adapter class
     }
 
     // So the recycler view how many items we want to display
@@ -88,5 +89,18 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
                 return ViewHolder(view)
             }
         }
+    }
+}
+
+// Diff util class that improve performance by having a list of only the key and value that has changed
+class SleepNightDiffCallback : DiffUtil.ItemCallback<SleepNight>() {
+    // Check if the id are the same
+    override fun areItemsTheSame(oldItem: SleepNight, newItem: SleepNight): Boolean {
+        return oldItem.nightId == newItem.nightId
+    }
+
+    // Check all of the fields of both data classes
+    override fun areContentsTheSame(oldItem: SleepNight, newItem: SleepNight): Boolean {
+        return oldItem == newItem
     }
 }
