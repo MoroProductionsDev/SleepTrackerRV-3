@@ -16,8 +16,7 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
-import android.graphics.Color
-import android.text.Layout
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.TextItemViewHolder
 import com.example.android.trackmysleepquality.convertDurationToFormatted
 import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
@@ -45,24 +43,6 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
     // So the recycler view how many items we want to display
     override fun getItemCount() = data.size
 
-    // Retrieves item from the data list
-    // Set up so the recycler view can render the data
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = data[position]
-        val res = holder.itemView.context.resources
-        holder.sleepLength.text = convertDurationToFormatted(item.startTimeMilli, item.endTimeMilli, res)
-        holder.quality.text = convertNumericQualityToString(item.sleepQuality, res)
-        holder.qualityImage.setImageResource(when (item.sleepQuality) {
-            0 -> R.drawable.ic_sleep_0
-            1 -> R.drawable.ic_sleep_1
-            2 -> R.drawable.ic_sleep_2
-            3 -> R.drawable.ic_sleep_3
-            4 -> R.drawable.ic_sleep_4
-            5 -> R.drawable.ic_sleep_5
-            else -> R.drawable.ic_sleep_active
-        })
-    }
-
     // inflates the TextItem view and return the ViewHolder
     // provide the view holder when requested
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -71,12 +51,35 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
         return ViewHolder(view)
     }
 
-    // Let the recycle view node when the data changes
 
+    // Retrieves item from the data list
+    // Set up so the recycler view can render the data
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = data[position]
+        holder.bind(item)
+    }
+
+    // Let the recycle view node when the data changes
     // internal view holder for display
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+        val res = itemView.context.resources
         val sleepLength : TextView = itemView.findViewById(R.id.id_sleep_length)
         val quality : TextView = itemView.findViewById(R.id.id_quality_string)
         val qualityImage : ImageView = itemView.findViewById(R.id.id_quality_image)
+
+
+        fun bind(item: SleepNight) {
+            sleepLength.text = convertDurationToFormatted(item.startTimeMilli, item.endTimeMilli, res)
+            quality.text = convertNumericQualityToString(item.sleepQuality, res)
+            qualityImage.setImageResource(when (item.sleepQuality) {
+                0 -> R.drawable.ic_sleep_0
+                1 -> R.drawable.ic_sleep_1
+                2 -> R.drawable.ic_sleep_2
+                3 -> R.drawable.ic_sleep_3
+                4 -> R.drawable.ic_sleep_4
+                5 -> R.drawable.ic_sleep_5
+                else -> R.drawable.ic_sleep_active
+            })
+        }
     }
 }
