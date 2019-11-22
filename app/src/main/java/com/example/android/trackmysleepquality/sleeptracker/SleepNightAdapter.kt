@@ -45,10 +45,9 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
 
     // inflates the TextItem view and return the ViewHolder
     // provide the view holder when requested
+    // check what layout needs to be inflate
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.list_item_sleep_night, parent, false)
-        return ViewHolder(view)
+        return ViewHolder.from(parent)
     }
 
 
@@ -61,7 +60,7 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
 
     // Let the recycle view node when the data changes
     // internal view holder for display
-    class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder private constructor (itemView : View) : RecyclerView.ViewHolder(itemView) {
         val res = itemView.context.resources
         val sleepLength : TextView = itemView.findViewById(R.id.id_sleep_length)
         val quality : TextView = itemView.findViewById(R.id.id_quality_string)
@@ -80,6 +79,14 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
                 5 -> R.drawable.ic_sleep_5
                 else -> R.drawable.ic_sleep_active
             })
+        }
+
+        companion object {
+             fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val view = layoutInflater.inflate(R.layout.list_item_sleep_night, parent, false)
+                return ViewHolder(view)
+            }
         }
     }
 }
