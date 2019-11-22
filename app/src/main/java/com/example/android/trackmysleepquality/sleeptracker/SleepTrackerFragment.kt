@@ -61,6 +61,18 @@ class SleepTrackerFragment : Fragment() {
 
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
+        // make a new SleepNightAdaptor and use binding to associate with recycler view
+        val adapter = SleepNightAdapter()
+        binding.sleepList.adapter = adapter
+
+        // Tell the adaptor which data should be adapting
+        // be creating an observer that sets the adaptor whenever their is new data
+        sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                adapter.data = it
+            }
+        })
+
         binding.setLifecycleOwner(this)
 
         // Add an Observer on the state variable for showing a Snackbar message

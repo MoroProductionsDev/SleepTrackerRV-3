@@ -16,14 +16,26 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
+import android.text.Layout
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.TextItemViewHolder
 import com.example.android.trackmysleepquality.database.SleepNight
 
 class SleepNightAdapter : RecyclerView.Adapter<TextItemViewHolder>() {
     // list of sleep night entities
     var data = listOf<SleepNight>()
+
+    // custom setter
+    // will use the adaptor to bind items that should be on the screen.
+    // it will the the recycler view that data has changed
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
 
     // So the recycler view how many items we want to display
     override fun getItemCount() = data.size
@@ -35,7 +47,14 @@ class SleepNightAdapter : RecyclerView.Adapter<TextItemViewHolder>() {
         holder.textView.text = item.sleepQuality.toString()
     }
 
+    // inflates the TextItem view and return the ViewHolder
+    // provide the view holder when requested
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextItemViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val view = layoutInflater.inflate(R.layout.text_item_view, parent, false) as TextView
+        return TextItemViewHolder(view)
     }
+
+    // Let the recycle view node when the data changes
+
 }
