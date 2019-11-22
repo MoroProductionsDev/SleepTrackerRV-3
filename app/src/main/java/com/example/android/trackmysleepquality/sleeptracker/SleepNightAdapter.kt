@@ -24,26 +24,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter // from package androidx. NOT android
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.convertDurationToFormatted
 import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
 
-class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
-    // list of sleep night entities
-    var data = listOf<SleepNight>()
-
-    // custom setter
-    // will use the adaptor to bind items that should be on the screen.
-    // it will the the recycler view that data has changed
-    set(value) {
-        field = value
-        notifyDataSetChanged()  // base method to Adapter class
-    }
-
-    // So the recycler view how many items we want to display
-    override fun getItemCount() = data.size
-
+class SleepNightAdapter : ListAdapter<SleepNight, SleepNightAdapter.ViewHolder>(SleepNightDiffCallback()) {
     // inflates the TextItem view and return the ViewHolder
     // provide the view holder when requested
     // check what layout needs to be inflate
@@ -55,7 +42,7 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
     // Retrieves item from the data list
     // Set up so the recycler view can render the data
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = data[position]
+        val item = getItem(position)
         holder.bind(item)
     }
 
@@ -93,6 +80,7 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
 }
 
 // Diff util class that improve performance by having a list of only the key and value that has changed
+// Allows our adaptor to use diff util to determine the minimum changes when list get updated
 class SleepNightDiffCallback : DiffUtil.ItemCallback<SleepNight>() {
     // Check if the id are the same
     override fun areItemsTheSame(oldItem: SleepNight, newItem: SleepNight): Boolean {
