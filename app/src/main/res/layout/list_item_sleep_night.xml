@@ -30,34 +30,13 @@
             tools:srcCompat="@drawable/ic_sleep_5" />
 
         <TextView
-            android:id="@+id/id_sleep_length"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:text="TextView"
-            android:contentDescription="this display the day of the recorded event"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/id_quality_image"
-            app:layout_constraintTop_toTopOf="@+id/id_quality_image"
-            app:sleepDurationFormatted="@{sleep}"
-            tools:text="Wednesday" />
-
-        <TextView
             android:id="@+id/id_quality_string"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/id_quality_image"
-            app:layout_constraintTop_toBottomOf="@+id/id_sleep_length"
-            app:sleepQualityString="@{sleep}"
-            tools:text="Excellent!!!" />
+            app:layout_constraintEnd_toEndOf="@id/id_quality_image"
+            app:layout_constraintStart_toStartOf="@+id/id_quality_image"
+            app:layout_constraintTop_toBottomOf="@+id/id_quality_image"
+            app:sleepQualityString="@{sleep}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
