@@ -235,4 +235,22 @@ class SleepTrackerViewModel(
         super.onCleared()
         viewModelJob.cancel()
     }
+
+    /*
+    * Added data to navigation
+    * Declared a mutable version as private and created a public getter to allow access
+    */
+    private val _navigateToSleepDataQuality = MutableLiveData<Long>()
+    val navigateToSleepDataQuality
+        get() = _navigateToSleepDataQuality
+
+    // initiated and complete navigation
+    fun onSleepNightClicked(id : Long) {
+        _navigateToSleepDataQuality.value = id
+    }
+
+    // sets our _navigateToSleepQuality to null
+    fun onSleepDataQualityNavigated() {
+        _navigateToSleepDataQuality.value = null
+    }
 }
