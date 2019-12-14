@@ -18,6 +18,7 @@ package com.example.android.trackmysleepquality.sleeptracker
 
 import android.provider.ContactsContract
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -29,26 +30,62 @@ import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
 import com.example.android.trackmysleepquality.generated.callback.OnClickListener
 
-class SleepNightAdapter(val clickListener : SleepNightListener) : ListAdapter<SleepNight, SleepNightAdapter.ViewHolder>(SleepNightDiffCallback()) {
+// Constant identifier for the sealed class
+private val ITEM_VIEW_TYPE_HEADER = 0
+private val ITEM_VIEW_TYPE_ITEM = 1
+
+// Update declaration of SleepNight adaptor to support any type of viewHolder
+// Set it up to know which view type to return (Header, View)
+class SleepNightAdapter(val clickListener : SleepNightListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(SleepNightDiffCallback()) {
     // inflates the TextItem view and return the ViewHolder
     // provide the view holder when requested
     // check what layout needs to be inflate
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+    // Update return to RecyclerView.ViewHolder
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        // Return a item or header base on the sealed class
+        return when(viewType) {
+            ITEM_VIEW_TYPE_HEADER -> TextViewHolder.from(parent)
+            ITEM_VIEW_TYPE_ITEM -> ViewHolder.from(parent)
+            else -> throw ClassCastException("Unknown viewType ${viewType}")
+        }
     }
 
 
     // Retrieves item from the data list
     // Set up so the recycler view can render the data
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // val item = getItem(position)
-        // holder.bind(item)
-        holder.bind(clickListener, getItem(position)!!)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        // This code will unwrap a data item to pass a SleepNight to the view holder
+        when (holder) {
+            is ViewHolder ->{
+                val nightItem = getItem(position) as DataItem.SleepNightItem
+                holder.bind(nightItem.sleepNight, clickListener)
+            }
+        }
     }
 
+    // Add at text holder view class
+    class TextViewHolder(view : View) : RecyclerView.ViewHolder(view) {
+        companion object {
+            fun from(parent : ViewGroup) : TextViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val view = layoutInflater.inflate(R.layout.header, parent, false)
+                return TextViewHolder(view)
+            }
+        }
+    }
+
+    // Checks whether the item is header or item
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
+            is DataItem.SleepNightItem -> ITEM_VIEW_TYPE_ITEM
+        }
+    }
+
+
+
     // Let the recycle view node when the data changes
-    // internal view holder for display
-                                                                        // the root is a view. binding is a View Holder
+    // internal view holder for display     // the root is a view. binding is a View Holder
     class ViewHolder private constructor (val binding: ListItemSleepNightBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(clickListener: SleepNightListener, item: SleepNight) {
             binding.sleep = item
