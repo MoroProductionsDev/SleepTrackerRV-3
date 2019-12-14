@@ -28,7 +28,7 @@ import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
 import com.example.android.trackmysleepquality.generated.callback.OnClickListener
 
-class SleepNightAdapter : ListAdapter<SleepNight, SleepNightAdapter.ViewHolder>(SleepNightDiffCallback()) {
+class SleepNightAdapter(val clickListener : SleepNightListener) : ListAdapter<SleepNight, SleepNightAdapter.ViewHolder>(SleepNightDiffCallback()) {
     // inflates the TextItem view and return the ViewHolder
     // provide the view holder when requested
     // check what layout needs to be inflate
@@ -40,16 +40,18 @@ class SleepNightAdapter : ListAdapter<SleepNight, SleepNightAdapter.ViewHolder>(
     // Retrieves item from the data list
     // Set up so the recycler view can render the data
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item)
+        // val item = getItem(position)
+        // holder.bind(item)
+        holder.bind(clickListener, getItem(position)!!)
     }
 
     // Let the recycle view node when the data changes
     // internal view holder for display
                                                                         // the root is a view. binding is a View Holder
     class ViewHolder private constructor (val binding: ListItemSleepNightBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: SleepNight) {
+        fun bind(clickListener: SleepNightListener, item: SleepNight) {
             binding.sleep = item
+            binding.clickListener = clickListener
             binding.executePendingBindings()    // execute the pending binding right away
         }
 
