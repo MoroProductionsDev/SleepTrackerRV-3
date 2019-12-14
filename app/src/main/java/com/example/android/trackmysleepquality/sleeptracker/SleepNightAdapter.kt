@@ -16,6 +16,7 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -82,4 +83,23 @@ class SleepNightDiffCallback : DiffUtil.ItemCallback<SleepNight>() {
 
 class SleepNightListener(val clickListener: (sleepId : Long) -> Unit) {
     fun onClick(night : SleepNight) = clickListener(night.nightId)
+}
+
+// Sealed class. Create a single class that can represent two types of data a SleepNight or a header
+// Sealed class is close type that means that all subclass of data must be define in this file
+// Sealed cannot be a base class. It cannot extends and this class
+// Avoid defining of any new DataItem
+sealed class DataItem {
+    // This a data class which is wrapper for SleepNight
+    data class SleepNightItem(val sleepNigth : SleepNight) : DataItem() {
+        override val id = sleepNigth.nightId
+    }
+
+    // Since the header has no data. It is created as an object which only has one instance of it
+    // needs id of each item
+    object Header: DataItem() {
+        override val id = Long.MIN_VALUE
+    }
+
+    abstract val id : Long
 }
