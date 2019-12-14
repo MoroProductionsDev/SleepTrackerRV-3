@@ -29,6 +29,10 @@ import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
 import com.example.android.trackmysleepquality.generated.callback.OnClickListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // Constant identifier for the sealed class
 private val ITEM_VIEW_TYPE_HEADER = 0
@@ -37,6 +41,25 @@ private val ITEM_VIEW_TYPE_ITEM = 1
 // Update declaration of SleepNight adaptor to support any type of viewHolder
 // Set it up to know which view type to return (Header, View)
 class SleepNightAdapter(val clickListener : SleepNightListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(SleepNightDiffCallback()) {
+    // Define a code routine
+    private val adapterScore = CoroutineScope(Dispatchers.Default)
+
+    fun addHeaderAndsubmitlist(list : List<SleepNight>?) {
+        adapterScore.launch {
+            val items = when (list) {
+                null -> listOf(DataItem.Header)
+                else -> listOf(DataItem.Header) + list.map { DataItem.SleepNightItem(it) }
+            }
+
+            withContext(Dispatchers.Main) {
+                submitList(items)
+            }
+        }
+    }
+
+
+
+
     // inflates the TextItem view and return the ViewHolder
     // provide the view holder when requested
     // check what layout needs to be inflate
@@ -58,7 +81,7 @@ class SleepNightAdapter(val clickListener : SleepNightListener) : ListAdapter<Da
         when (holder) {
             is ViewHolder ->{
                 val nightItem = getItem(position) as DataItem.SleepNightItem
-                holder.bind(nightItem.sleepNight, clickListener)
+                holder.bind(nightItem.sleepNigth, clickListener)
             }
         }
     }
@@ -74,7 +97,7 @@ class SleepNightAdapter(val clickListener : SleepNightListener) : ListAdapter<Da
         }
     }
 
-    // Checks whether the item is header or item
+    // Checks whether the item is header or SleepNight
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
@@ -87,7 +110,7 @@ class SleepNightAdapter(val clickListener : SleepNightListener) : ListAdapter<Da
     // Let the recycle view node when the data changes
     // internal view holder for display     // the root is a view. binding is a View Holder
     class ViewHolder private constructor (val binding: ListItemSleepNightBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(clickListener: SleepNightListener, item: SleepNight) {
+        fun bind(item: SleepNight, clickListener: SleepNightListener) {
             binding.sleep = item
             binding.clickListener = clickListener
             binding.executePendingBindings()    // execute the pending binding right away
@@ -106,14 +129,14 @@ class SleepNightAdapter(val clickListener : SleepNightListener) : ListAdapter<Da
 
 // Diff util class that improve performance by having a list of only the key and value that has changed
 // Allows our adaptor to use diff util to determine the minimum changes when list get updated
-class SleepNightDiffCallback : DiffUtil.ItemCallback<SleepNight>() {
+class SleepNightDiffCallback : DiffUtil.ItemCallback<DataItem>() {
     // Check if the id are the same
-    override fun areItemsTheSame(oldItem: SleepNight, newItem: SleepNight): Boolean {
-        return oldItem.nightId == newItem.nightId
+    override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
+        return oldItem.id == newItem.id
     }
 
     // Check all of the fields of both data classes
-    override fun areContentsTheSame(oldItem: SleepNight, newItem: SleepNight): Boolean {
+    override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
         return oldItem == newItem
     }
 }
