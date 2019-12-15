@@ -1,4 +1,4 @@
-# <SleepTrackerRV_part2>
+# <name of app>
 
 An Android application that uses a RecyclerView to track and display the user's sleep quality.
 
@@ -10,18 +10,23 @@ Time spent: <4hr>
 
 The following **required** functionality is complete:
 
-* [X] Refactor onBindViewHolder
-* [X] Refactor onCreateViewHolder
-* [X] Refresh sleep night data using DiffUtil
-* [X] Add data binding to the adapter.
-* [X] Add binding adapters.
-
+* [X] Change LinearLayout to GridLayout.
+* [X] Implement Click Listener SleepNight icons.
+* [X] Add navigation to detail screen when SleepNight icon is clicked.
+* [X] Add list header.
+* [X] Modify header to span and display properly on a GridLayout.
 
 The following **additional** features are implemented:
 
 * [ ] List anything else that you can get done to improve the app functionality!
 
 ## Previous implemented functionality:
+
+* [X] Refactor onBindViewHolder
+* [X] Refactor onCreateViewHolder
+* [X] Refresh sleep night data using DiffUtil
+* [X] Add data binding to the adapter.
+* [X] Add binding adapters.
 
 * [X] Replace ScrollView with RecyclerView.
 * [X] Create RecyclerView adapter and ViewHolder for data binding.
@@ -32,7 +37,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='sleep_tracker_RV2_demo.gif' title='Sleep Tracker RecyclerView animated demo' alt='Sleep Tracker RecyclerView demo' />
+<img src='sleep_tracker_RV3_demo.gif' title='Sleep Tracker RecyclerView animated demo' alt='Sleep Tracker RecyclerView demo' />
 
 ## Notes
 

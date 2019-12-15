@@ -17,7 +17,8 @@
         tools:context=".sleepdetail.SleepDetailFragment">
 
         <ImageView
-            android:id="@+id/quality_image"
+            android:id="@+id/id_quality_image"
+            android:contentDescription="Quality sleep image describe the quality of sleep"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:layout_marginStart="8dp"
